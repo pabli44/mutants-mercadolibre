@@ -24,14 +24,6 @@ public class MutantController {
         this.mutantService = mutantService;
     }
 
-    /*
-    @CrossOrigin
-    @PostMapping
-    public ResponseMapDTO save(@RequestBody @Valid MutantDTO mutantDTO) {
-        return new ResponseMapDTO("isMutant", mutantService.save(mutantDTO));
-    }
-    */
-
     @PostMapping
     public HttpEntity<Boolean> save(@RequestBody @Valid MutantDTO mutantDTO) {
         Boolean res = mutantService.save(mutantDTO);

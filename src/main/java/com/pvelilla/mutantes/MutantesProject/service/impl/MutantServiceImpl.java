@@ -5,14 +5,18 @@ import com.pvelilla.mutantes.MutantesProject.domain.MutantDTO;
 import com.pvelilla.mutantes.MutantesProject.entities.Mutant;
 import com.pvelilla.mutantes.MutantesProject.repository.MutantRepository;
 import com.pvelilla.mutantes.MutantesProject.service.MutantService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class MutantServiceImpl implements MutantService {
 
+    private static final Logger log = LoggerFactory.getLogger(MutantServiceImpl.class);
     private MutantRepository mutantRepository;
 
 
@@ -26,52 +30,49 @@ public class MutantServiceImpl implements MutantService {
         mutant.setDna(Arrays.toString(mutantDTO.getDna()));
         mutantRepository.save(mutant);
 
+        log.info("Saving data: "+mutant);
+
         return isMutant(mutantDTO.getDna());
     }
 
     private boolean isMutant(String[] dna){
+        List<List<String>> arrayConverted = getTwoDimensionsArray(dna);
 
-        String[][] arrayConverted = getTwoDimensionsArray(dna);
+        int results = 0;
 
-        int diagonalCounter = getDiagonalSequences(arrayConverted);
-        int horizontalCounter = getHorizontalSequences(arrayConverted);
-        int verticalCounter = getVerticalSequences(arrayConverted);
+        results+=getDiagonalSequences(arrayConverted);
 
-        for(int i=0;i<arrayConverted.length;i++){
-            for(int j=0;j<arrayConverted[i].length;j++){
-                System.out.println(i+","+j+"= "+arrayConverted[i][j]);
-            }
+        if(results<2){
+            results+=getHorizontalSequences(arrayConverted);
+        }else{
+            results+=getVerticalSequences(arrayConverted);
         }
 
-        return false;
+        return results<2?false:true;
     }
 
-    private String[][] getTwoDimensionsArray(String[] oneDimensionString){
-        String[][] resArray = new String[6][6];
-        LinkedList<String> resArray2 = new LinkedList<>();
+    private List<List<String>> getTwoDimensionsArray(String[] oneDimensionString){
+        List<List<String>> resArray2 = new ArrayList<List<String>>();
+        String v = "";
 
         for(int i=0;i<oneDimensionString.length;i++){
+            resArray2.add(new ArrayList<String>());
             for(int c=0;c<oneDimensionString[i].length();c++){
-                resArray[i][c] = String.valueOf(oneDimensionString[i].charAt(c));
-
-                //resArray2.add(i, resArray[i][c]);
-
-                System.out.println(i+","+c+": "+resArray[i][c]);
+                v = String.valueOf(oneDimensionString[i].charAt(c));
+                resArray2.get(i).add(v);
             }
         }
 
-        //System.out.println("resArray2: "+resArray2);
-
-        return resArray;
+        return resArray2;
     }
 
-    private int getDiagonalSequences(String[][] arrayConverted){
+    private int getDiagonalSequences(List<List<String>> arrayConverted){
         int letterCounter = 1;
         int diagonalCounter = 0;
 
-        for(int i=0;i<arrayConverted.length;i++){
+        for(int i=0;i<arrayConverted.size();i++){
             if(i>0){
-                if(arrayConverted[i][i].equals(arrayConverted[i-1][i-1])){
+                if(arrayConverted.get(i).get(i).equals(arrayConverted.get(i-1).get(i-1))){
                     letterCounter++;
                 }else{
                     letterCounter = 1;
@@ -87,15 +88,15 @@ public class MutantServiceImpl implements MutantService {
         return diagonalCounter;
     }
 
-    private int getHorizontalSequences(String[][] arrayConverted){
+    private int getHorizontalSequences(List<List<String>> arrayConverted){
         int letterCounter = 1;
         int horizontalCounter = 0;
 
-        for(int i=0;i<arrayConverted.length;i++){
+        for(int i=0;i<arrayConverted.size();i++){
             letterCounter = 1;
-            for(int j=0;j<arrayConverted[i].length;j++){
+            for(int j=0;j<arrayConverted.get(i).size();j++){
                 if(j>0){
-                    if(arrayConverted[i][j].equals(arrayConverted[i][j-1])){
+                    if(arrayConverted.get(i).get(j).equals(arrayConverted.get(i).get(j-1))){
                         letterCounter++;
                     }else{
                         letterCounter = 1;
@@ -113,14 +114,14 @@ public class MutantServiceImpl implements MutantService {
         return horizontalCounter;
     }
 
-    private int getVerticalSequences(String[][] arrayConverted){
+    private int getVerticalSequences(List<List<String>> arrayConverted){
         int letterCounter = 1;
         int verticalCounter = 0;
         int column = 0;
 
-        for(int i=0;i<arrayConverted.length;i++){
+        for(int i=0;i<arrayConverted.size();i++){
             if(i>0){
-                if(arrayConverted[i][column].equals(arrayConverted[i-1][column])){
+                if(arrayConverted.get(i).get(column).equals(arrayConverted.get(i-1).get(column))){
                     letterCounter++;
                 }else{
                     letterCounter = 1;
@@ -132,11 +133,11 @@ public class MutantServiceImpl implements MutantService {
                 }
             }
 
-            if(i==arrayConverted[i].length-1 && column==arrayConverted[i].length-1){
+            if(i==arrayConverted.get(i).size()-1 && column==arrayConverted.get(i).size()-1){
                 break;
             }
 
-            if(i==arrayConverted.length-1){
+            if(i==arrayConverted.size()-1){
                 column++;
                 i = -1;
                 letterCounter = 1;
