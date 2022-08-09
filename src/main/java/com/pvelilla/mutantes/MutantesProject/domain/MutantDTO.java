@@ -15,4 +15,8 @@ public class MutantDTO {
 
     @NotNull
     private String[] dna;
+
+    @NotNull
+    private int mutant;
+
 }

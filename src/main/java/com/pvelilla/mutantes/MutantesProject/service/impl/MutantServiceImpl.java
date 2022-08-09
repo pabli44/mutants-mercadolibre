@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MutantServiceImpl implements MutantService {
@@ -26,13 +27,15 @@ public class MutantServiceImpl implements MutantService {
 
     @Override
     public boolean save(MutantDTO mutantDTO) {
+        boolean val = isMutant(mutantDTO.getDna());
         Mutant mutant = new DozerMappingBuilder().map(mutantDTO, Mutant.class);
         mutant.setDna(Arrays.toString(mutantDTO.getDna()));
+        mutant.setMutant(val?1:0);
         mutantRepository.save(mutant);
 
         log.info("Saving data: "+mutant);
 
-        return isMutant(mutantDTO.getDna());
+        return val;
     }
 
     private boolean isMutant(String[] dna){
@@ -145,5 +148,14 @@ public class MutantServiceImpl implements MutantService {
         }
 
         return verticalCounter;
+    }
+
+    @Override
+    public List<MutantDTO> findAll() {
+        return mutantRepository.findAll()
+                                                   .stream()
+                                                   .map(mapper -> new DozerMappingBuilder().convertToDTO(mapper, new MutantDTO()))
+                                                    .collect(Collectors.toList());
+
     }
 }

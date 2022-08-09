@@ -1,5 +1,7 @@
 package com.pvelilla.mutantes.MutantesProject.config.dozer;
 
+import com.pvelilla.mutantes.MutantesProject.domain.MutantDTO;
+import com.pvelilla.mutantes.MutantesProject.entities.Mutant;
 import org.dozer.DozerBeanMapper;
 import org.dozer.loader.api.BeanMappingBuilder;
 
@@ -26,6 +28,14 @@ public class DozerMappingBuilder {
 
 	public <T> T map(Object source, Class<T> destinationClass) {
 		return dozerBeanMapper.map(source, destinationClass);
+	}
+
+	public MutantDTO convertToDTO(Mutant source, MutantDTO destinationClass) {
+		destinationClass.setMutantId(source.getMutantId());
+		destinationClass.setDna(new String[]{source.getDna()});
+		destinationClass.setMutant(source.getMutant());
+
+		return destinationClass;
 	}
 
 	private BeanMappingBuilder beanMappingBuilder() {
