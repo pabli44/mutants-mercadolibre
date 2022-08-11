@@ -23,6 +23,7 @@ dependencies {
 	implementation group: 'io.craftsman', name: 'dozer-jdk8-support', version: '1.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.cloud:spring-cloud-gcp-starter-sql-mysql:1.2.8.RELEASE'
 	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
