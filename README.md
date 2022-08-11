@@ -1,19 +1,38 @@
 # mutants-mercadolibre
-DNA Mercadolibre
+DNA Mercadolibre API
+<br>
+<br>
+<br>
+How to use:
 
-How to use the API
 
-for mutants dna validation:
-(POST)
+LOCAL <br>
+for mutants dna validation:<br>
+(POST)<br>
 http://localhost:8080/mutants/apiv1/mutant
 
-json body like:
-
+json body like: <br>
 {
     "dna":["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
 }
 
-for getting stats:
-(GET)
+for getting stats:<br>
+(GET)<br>
 http://localhost:8080/mutants/apiv1/stats
+<br><br>
+
+
+APPENGINE<br>
+for mutants dna validation:<br>
+(POST)<br>
+https://mutants-project-359021.uc.r.appspot.com/mutants/apiv1/mutant
+
+json body like:<br>
+{
+"dna":["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
+}
+
+for getting stats:<br>
+(GET)<br>
+https://mutants-project-359021.uc.r.appspot.com/mutants/apiv1/stats
 
